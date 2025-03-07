@@ -1,13 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Users } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
-  findOne(username: string) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectModel(Users) private readonly userRepository: typeof Users,
   ) {}
@@ -17,11 +14,18 @@ export class UserService {
     });
 
     if (existingUser) {
-      return { message: 'User already exists' };
+      throw new BadRequestException({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Email already exists',
+      });
+    }
+
+    if (userBody.password != userBody.confirmPassword) {
+      throw new Error('password incorrect');
     }
 
     await this.userRepository.create({
-      fname: userBody.fname,
+      username: userBody.username,
       email: userBody.email,
       password: userBody.password,
     });

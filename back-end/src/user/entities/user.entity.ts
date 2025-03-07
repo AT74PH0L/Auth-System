@@ -9,9 +9,10 @@ import * as bcrypt from 'bcrypt';
 
 @Table
 export class Users extends Model {
-  toObject(): { [x: string]: any; password: any; } {
+  toObject(): { [x: string]: any; password: any } {
     throw new Error('Method not implemented.');
   }
+  
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -23,7 +24,7 @@ export class Users extends Model {
     type: DataType.STRING,
     allowNull: false,
   })
-  declare fname: string;
+  declare username: string;
 
   @Column({
     type: DataType.STRING,

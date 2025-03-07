@@ -4,11 +4,9 @@ import {
   Post,
   Body,
   Request,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
+// import { Request } from 'express';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGard } from '../auth/jwt-auth.gard';
@@ -22,7 +20,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get('profile')
+  @Get('/profile')
   @UseGuards(JwtAuthGard)
   getProfile(@Request() req) {
     return req.user;
