@@ -9,7 +9,7 @@ import {
 // import { Request } from 'express';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtAuthGard } from '../auth/jwt-auth.gard';
+import { JwtAuthGard } from '../auth/gard/jwt-auth.gard';
 
 @Controller('user')
 export class UserController {

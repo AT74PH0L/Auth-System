@@ -5,6 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
+  findByEmail(email: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectModel(Users) private readonly userRepository: typeof Users,
   ) {}

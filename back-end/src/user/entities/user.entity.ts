@@ -12,7 +12,7 @@ export class Users extends Model {
   toObject(): { [x: string]: any; password: any } {
     throw new Error('Method not implemented.');
   }
-  
+
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -38,9 +38,20 @@ export class Users extends Model {
   })
   declare password: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare role: string;
+
   @BeforeCreate
   static async hashPassword(instance: Users) {
     const salt = await bcrypt.genSalt(10);
     instance.password = await bcrypt.hash(instance.password, salt);
+  }
+
+  @BeforeCreate
+  static async defultRole(instance:Users){
+    instance.role = "user"
   }
 }

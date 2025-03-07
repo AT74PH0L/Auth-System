@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -19,15 +19,23 @@ export class AuthService {
     return null;
   }
 
-  login(body: UserPayload): { access_token: string } {
-    const payload = { email: body.email, fname: body.fname };
+  async login(body: UserPayload): Promise<{ access_token: string }> {
+    const user = await this.usersService.getUserByEmail(body.email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const payload = { email: body.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  mock() {
+    return 'Admin page';
   }
 }
 
 export interface UserPayload {
   email: string;
-  fname: string;
+  username: string;
 }
