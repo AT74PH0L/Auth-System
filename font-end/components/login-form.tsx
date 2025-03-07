@@ -37,7 +37,7 @@ export function LoginForm({
 
       // เปลี่ยนเส้นทางหลังจากล็อกอินสำเร็จ
       setTimeout(() => {
-        router.push("/Home");
+        router.push("/home");
       }, 200); // เปลี่ยนเส้นทางไปที่หน้าที่ต้องการ เช่น "/dashboard"
     } catch (err) {
       console.error("Login error:", err);
