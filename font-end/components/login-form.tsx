@@ -32,13 +32,9 @@ export function LoginForm({
         email,
         password,
       });
-      // console.log("User logged in:", response.data);
-      // localStorage.setItem("access_token", response.data.access_token);
 
       // เปลี่ยนเส้นทางหลังจากล็อกอินสำเร็จ
-      setTimeout(() => {
-        router.push("/home");
-      }, 200); // เปลี่ยนเส้นทางไปที่หน้าที่ต้องการ เช่น "/dashboard"
+      router.push("/profile"); // เปลี่ยนเป็นหน้าที่ต้องการหลัง login
     } catch (err) {
       console.error("Login error:", err);
       setError("Invalid email or password.");
@@ -48,70 +44,68 @@ export function LoginForm({
   };
 
   return (
-    <form
-      className={cn("flex flex-col gap-6", className)}
-      {...props}
-      onSubmit={handleSubmit}
-    >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
-        <p className="text-muted-foreground text-sm text-balance">
-          Enter your email below to login to your account
-        </p>
-      </div>
-      <div className="grid gap-6">
-        <div className="grid gap-3">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <div className={cn("flex flex-col gap-6", className)}>
+      {/* Form Login */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <p className="text-muted-foreground text-sm text-balance">
+            Enter your email below to login to your account
+          </p>
         </div>
-        <div className="grid gap-3">
-          <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
+
+        <div className="grid gap-6">
+          <div className="grid gap-3">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-          <Input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="grid gap-3">
+            <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <a
+                href="#"
+                className="ml-auto text-sm underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </a>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Login..." : "Login"}
+          </Button>
         </div>
-        {error && <div className="text-red-500 text-sm">{error}</div>}
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Login..." : "Login"}
-        </Button>
+      </form>
+
+      {/* Google Login */}
+      <div className="grid gap-6 relative text-center text-sm">
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
             Or continue with
           </span>
         </div>
-        </form>
         <Button
           variant="outline"
           className="w-full"
           onClick={async () => {
             setLoading(true); // เริ่มโหลด
             try {
-              // ทำการเรียก Google Login
-              await axiosInstant.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
-              );
-              setTimeout(() => {
-                router.push("/home");
-              }, 200);
+              // เปลี่ยนเส้นทางไปยัง Google Login
+              window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
             } catch (error) {
               console.error("Error with Google login redirect:", error);
               setError("Failed to login with Google.");
@@ -155,11 +149,14 @@ export function LoginForm({
           )}
         </Button>
       </div>
+
+      {/* ข้อความ Sign up */}
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
         <a href="/auth/register" className="underline underline-offset-4">
           Sign up
         </a>
       </div>
+    </div>
   );
 }
