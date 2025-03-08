@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UserService,
+    private readonly usersService: UserService,
     private jwtService: JwtService,
   ) {}
 
@@ -30,7 +30,32 @@ export class AuthService {
     };
   }
 
-  mock() {
+  async googleLogin(req): Promise<any> {
+    if (!req.user) {
+      throw new Error('Google login failed: No user information received.');
+    }
+
+    const { email, name, picture, googleId } = req.user;
+    let user = await this.usersService.getUserByEmail(email);
+
+    if (!user) {
+      await this.usersService.create({
+        username: name,
+        email: email,
+        password: '',
+        confirmPassword: '',
+        googleId: googleId || null,
+        picture: picture || null,
+      });
+    }
+    const payload = { email: email, role: user?.role ?? 'user' };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+
+  async mock() {
     return 'Admin page';
   }
 }

@@ -11,6 +11,7 @@ export class UserService {
   constructor(
     @InjectModel(Users) private readonly userRepository: typeof Users,
   ) {}
+
   create = async (userBody: CreateUserDto) => {
     const existingUser = await this.userRepository.findOne({
       where: { email: userBody.email },
@@ -31,12 +32,17 @@ export class UserService {
       username: userBody.username,
       email: userBody.email,
       password: userBody.password,
+      googleId: userBody.googleId || null,
+      picture: userBody.picture || null,
     });
 
     return { message: 'Create success' };
   };
 
   getUserByEmail = async (email: string) => {
-    return await this.userRepository.findOne({ where: { email: email } });
+    const result = await this.userRepository.findOne({
+      where: { email: email },
+    });
+    return result;
   };
 }

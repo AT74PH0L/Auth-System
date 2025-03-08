@@ -34,7 +34,7 @@ export class Users extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   declare password: string;
 
@@ -44,14 +44,28 @@ export class Users extends Model {
   })
   declare role: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare googleId: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare picture: string;
+
   @BeforeCreate
   static async hashPassword(instance: Users) {
-    const salt = await bcrypt.genSalt(10);
-    instance.password = await bcrypt.hash(instance.password, salt);
+    if(instance.password != ''){
+      const salt = await bcrypt.genSalt(10);
+      instance.password = await bcrypt.hash(instance.password, salt);
+    }
   }
 
   @BeforeCreate
-  static async defultRole(instance:Users){
-    instance.role = "user"
+  static async defultRole(instance: Users) {
+    instance.role = 'user';
   }
 }

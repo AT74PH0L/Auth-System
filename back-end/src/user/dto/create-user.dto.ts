@@ -27,4 +27,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Length(2, 50)
   confirmPassword: string;
+
+  googleId: string;
+
+  picture: string;
 }
